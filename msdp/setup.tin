@@ -1,0 +1,26 @@
+#class setup kill;
+#class setup open;
+
+#alias {loadmap} {
+	#if {$primarychar} {
+		#map create 50000;
+		#map flag nofollow;
+		#map flag vtmap;
+		#map flag static;
+		#map read an_msdp.map
+	}
+}
+/*
+#event {SESSION CONNECTED}
+{
+	loadmap;
+}
+*/
+#event {SESSION DISCONNECTED}
+{
+	#if {$primarychar} {
+		#map write an_msdp.map
+	}
+}
+
+#class setup close;

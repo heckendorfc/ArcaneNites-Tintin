@@ -1,0 +1,185 @@
+#class autobuff kill;
+#class autobuff open;
+
+#var emotedelay 8
+#var shouldbuff 0
+
+#act {tells the group 'buffon'$} { #var shouldbuff 1; }
+#act {tells the group 'buffoff'$} { #var shouldbuff 0; }
+
+#tick {checkbuffs} {
+	#var buffing 0;
+	#foreach {$spells[]} name { #if {$spells[$name]==2} { #var buffing 1; } };
+	#if {$incombat==0 && $shouldbuff && $buffing==0}{
+		needbuff;
+	}
+} {20}
+
+#alias {needspell} {
+	#if {$spells[%1]!=1} {
+		#nop emote requires %1;
+	}
+}
+
+#alias {removeneed} {
+	#delay {%2} {
+		#if {$spells[%1]!=1} {
+			#showme {\a\};
+			emote gives up on %1;
+			#unvar spells[%1];
+		}
+	}
+}
+
+#alias handlebuffspell {
+	#if {$spells[%1]!=1} {
+		#var spells[%1] 2;
+		repeatcast {$name};
+	}
+}
+
+#alias handlebuffskill {
+	#if {$spells[%1]!=1} {
+		#var spells[%1] 2;
+		repeatskill {%1} {$skillfailures[%1]};
+	}
+}
+
+#alias {newneedbuff} {
+	#foreach {$solospells[%*]} name {
+		handlebuffspell {$name};
+	};
+	#foreach {$myspells[%*]} name {
+		handlebuffspell {$name};
+	};
+	#foreach {$soloskills[%*]} name {
+		handlebuffskill {$name};
+	};
+	#foreach {$spells[]} name {
+		#if {$spells[$name]==0} {
+			needspell {$name};
+			removeneed {$name} 50;
+		}
+	}
+}
+
+#alias {needbuff} {
+	#foreach {$spells[]} name {
+		#list solospells find {$name} ss;
+		#list myspells find {$name} ms;
+		#list soloskills find {$name} sk;
+		#if {$spells[$name]!=1} {
+			#if {$ss || $ms} {
+				#var spells[$name] 2;
+				repeatcast {$name};
+			};
+			#elseif {$sk} {
+				#var spells[$name] 2;
+				repeatskill {$name} {$skillfailures[$name]};
+			};
+		}
+	};
+	#foreach {$spells[]} name {
+		#if {$spells[$name]==0} {
+			needspell {$name};
+			removeneed {$name} 50;
+		}
+	}
+}
+
+#act {^%+ requires %+} {
+	#list myspells find {%2} tempindex;
+	#if {$tempindex} {
+		repeatcast {%2} %1;
+	}
+}
+
+#alias {spellstatus} {
+	#var {spells[%1]} {%2};
+	#if {%2==1}{
+		#unact {^You lost your concentration while casting %2.};
+	};
+}
+
+#act {^Your feet rise off the ground.} {spellstatus {fly} 1}
+#act {^You slowly float to the ground.} {spellstatus {fly} 0}
+
+#act {^Your supreme combat abilities fade.} {spellstatus {combat} 0}
+#act {^You breathe deeply, and feel your combat senses rise!} {spellstatus {combat} 1}
+
+#act {^Your might wears off.} {spellstatus {might} 0}
+#act {^You concentrate, and feel your inner strength surge!} {spellstatus {might} 1}
+
+#act {^The white aura around your body fades.} {spellstatus {sanctuary} 0}
+#act {^You are surrounded by a white aura.} {spellstatus {sanctuary} 1}
+
+#act {^Your protection from fire wears off.} {spellstatus {fire protection} 0}
+#act {^You now feel protected against flames!} {spellstatus {fire protection} 1}
+
+#act {^Your fists quit glowing with power.} {spellstatus {iron fist style} 0}
+#act {^You fists glow with power.} {spellstatus {iron fist style} 1}
+
+#act {^Your deflection ability wears off.} {spellstatus {deflection} 0}
+#act {^You set your mind to deflecting attacks.} {spellstatus {deflection} 1}
+
+#act {^Your blade turning ability wears off.} {spellstatus {bladeturn} 0}
+#act {^You set your mind to turning blade attacks!} {spellstatus {bladeturn} 1}
+
+#act {^You feel yourself slow down.} {spellstatus {haste} 0}
+#act {^You feel yourself moving more quickly.} {spellstatus {haste} 1}
+
+#act {^Your skin feels soft again.} {spellstatus {stone skin} 0}
+#act {^Your skin turns to stone.} {spellstatus {stone skin} 1}
+
+#act {^You feel weaker.} {spellstatus {giant strength} 0}
+#act {^Your muscles surge with heightened power!} {spellstatus {giant strength} 1}
+
+#act {^You feel less righteous.} {spellstatus {bless} 0}
+#act {^You feel righteous.} {spellstatus {bless} 1}
+
+#act {^Your divine aura shimmers and disappears.} {spellstatus {holy aura} 0}
+#act {^You are surrounded by a holy aura.} {spellstatus {holy aura} 1}
+
+#act {^You feel less armored.} {spellstatus {armor} 0}
+#act {^You feel someone protecting you.} {spellstatus {armor} 1}
+
+#act {^Your intense power and concentration fades.} {spellstatus {drunken monk style} 0}
+#act {^Your eyes flash with power and concentration.} {spellstatus {drunken monk style} 1}
+
+#act {^You feel less protected.} {spellstatus {protection good} 0}
+#act {^You feel aligned with darkness.} {spellstatus {protection good} 1}
+
+#act {^You are no longer surrounded by a force shield.} {spellstatus {shield} 0}
+#act {^You are surrounded by a force shield.} {spellstatus {shield} 1}
+
+#act {^Your force of nature wears off.} {spellstatus {natures force} 0}
+#act {^An incredible force of natural force overcomes you.} {spellstatus {natures force} 1}
+
+#act {^Your shillelagh wears off.} {spellstatus {shillelagh} 0}
+#act {^Natural energy courses though you.} {spellstatus {shillelagh} 1}
+
+#act {^You slowly float down from the wind.} {spellstatus {wind walk} 0}
+#act {^You are now correctly tuned with the wind element.} {spellstatus {wind walk} 1}
+
+#act {^Your animal senses fade.} {spellstatus {animal senses} 0}
+#act {^You take the senses of the animal kingdom as your own.} {spellstatus {animal senses} 1}
+
+#act {^Your anti-magnetism wears off.} {spellstatus {magnetic barrier} 0}
+#act {^The forces of magnetism form a shield around you.} {spellstatus {magnetic barrier} 1}
+
+#act {^Your skin loses its bark-like feeling.} {spellstatus {barkskin} 0}
+#act {^Your skin transforms into a hard wood like substance.} {spellstatus {barkskin} 1}
+
+#act {^Your shield of elements fades with a burst of multi-colored light.} {spellstatus {elemental shield} 0}
+#act {^The Power of the elements now protect you.} {spellstatus {elemental shield} 1}
+
+#act {^Your mind and body are as one...EMPOWER!!} {spellstatus {empower} 1}
+#act {^Your pulse races as you are consumed by rage!} {spellstatus {berserk} 1}
+#act {^You feel your pulse slow down.} {spellstatus {empower} 0;spellstatus {berserk} 0}
+
+/*
+#act {^} {spellstatus {-} 0}
+#act {^} {spellstatus {-} 1}
+*/
+
+#class autobuff close;

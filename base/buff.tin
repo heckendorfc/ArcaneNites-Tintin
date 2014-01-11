@@ -1,0 +1,176 @@
+#class buff kill;
+#class buff open;
+
+#variable {cc_override} 0;
+#variable {castdelay} 3;
+#variable {incombat} 0;
+
+#tick {nextcombatcommand} {
+	#if {$incombat>0} {
+		#math combattickcount $combattickcount+1;
+		#if {$combattickcount==2} {
+			group_combatsignal;
+			#if {&g_combatlist[]} {
+				#showme {GROUP COMBAT CMD: $g_combatlist[1]};
+				$g_combatlist[1];
+				#list g_combatlist delete 1;
+				#var g_command 1;
+			};
+		};
+		#elseif {$combattickcount>=3} {
+			#if {$g_command==0} {
+				#if {&combatlist[]} {
+					#showme {COMBAT CMD: $combatlist[1]};
+					$combatlist[1];
+					#list combatlist delete 1;
+				};
+				#else {
+					defaultcombatcommand;
+				};
+			};
+			#var combattickcount 0;
+			#var g_command 0;
+		};
+	};
+	#else {
+		#var combattickcount 0;
+		#var g_command 0;
+		#list combatlist clear;
+		#list g_combatlist clear;
+	};
+} {1}
+
+#tick {nextsafecommand} {
+	#if {$incombat==0 && &commandlist[]} {
+		$commandlist[1];
+		#list commandlist delete 1;
+	};
+	#elseif {$incombat==0} {
+		#unact {^You lost your concentration};
+	}
+} {4}
+
+#alias {dcc} {
+	#alias {defaultcombatcommand} {%0};
+}
+
+#alias {g_pcc} {
+	#if {$g_cc_override==0} {
+		#list g_combatlist insert 1 {%0};
+	}
+}
+
+#alias {pcc} {
+	#if {$cc_override==0} {
+		#list combatlist insert 1 {%0};
+	}
+}
+
+#alias {cc} {
+	#list combatlist add {%0};
+}
+
+#alias {sc} {
+	#list commandlist add {%0};
+}
+
+#alias repeatskill {
+	%1;
+	#if {%2} {
+		#act {%2} { 
+			#list commandlist insert 1 {repeatskill {%1} %2}
+		}
+	}
+}
+
+#alias repeatcast {
+	#showme {-c '%1' %2-};
+	sc c '%1' %2;
+	#act {^You lost your concentration while casting %1.} { 
+		#list commandlist insert 1 {repeatcast {%1} %2}
+	}
+}
+
+#alias {allbuff} {
+	#foreach {$myspells[]} name {
+		#list commandlist add {repeatcast {$myspells[$name]} %1}
+	}
+}
+
+#alias {allselfbuff} {
+	allbuff;
+	#foreach {$solospells[]} name {
+		#list commandlist add {repeatcast {$solospells[$name]}}
+	};
+	#if {&soloskills[] && &skillfailures[]}{
+		#foreach {$soloskills[]} name {
+			#list commandlist add {repeatskill {$soloskills[$name]} {$skillfailures[$soloskills[$name]]}}
+		}
+	}
+}
+
+#alias {selfbuff} {
+	clearspells;
+	affects;
+};
+
+#alias {castspell} {
+	#delay {%2} {
+		#if {$spells[%1]!=1} {
+			#showme {%1};
+			c '%1';
+			#act {"^You lost your concentration} {
+				c '%1';
+			}
+		}
+	}
+}
+
+#alias {castloop} {
+	#foreach {$spells[]} name {
+		#if {$spells[$name]!=1} {
+			#math {spellwait} {$castdelay*$index};
+			#math {index} {$index+1};
+			castspell {$name} $spellwait;
+		}
+	};
+	#math {spellwait} {2+($castdelay*($index-1))};
+	#delay {$spellwait} {
+		#showme {Buffing done!};
+		#unact {"^You lost your concentration}
+	}
+}
+
+#alias {ab}{
+	#var {index} 0;
+	castloop;
+}
+
+#alias {buff} {
+	#var {index} 0;
+	clearspells;
+	affects;
+	#delay {1} {
+		#var shouldbuff 1;
+	};
+}
+
+#alias {clearspells} {
+	#foreach {$solospells[]} name {
+		#var {spells[$solospells[$name]]} 0
+	};
+	#foreach {$myspells[]} name {
+		#var {spells[$myspells[$name]]} 0
+	};
+	#foreach {$spells[]} name {
+		#var {spells[$name]} 0
+	};
+}
+
+#action {^Spell: %1  } {
+	#if {&{spells[%1]}} {
+		#var {spells[%1]} 1
+	}
+}
+
+#class buff close;

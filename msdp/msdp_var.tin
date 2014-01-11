@@ -1,0 +1,71 @@
+#class msdpvar kill;
+#class msdpvar open;
+
+#event {IAC SB MSDP IAC {HITROLL|DAMROLL|SAVES|AC|INT|WIS|STR|DEX|CON|CHA}} {
+	#var {c_hr} {$MSDP_HITROLL};
+	#var {c_dr} {$MSDP_DAMROLL};
+	#var {c_save} {$MSDP_SAVES};
+	#var {c_ac} {$MSDP_AC};
+	#var {c_str} {$MSDP_STR};
+	#var {c_int} {$MSDP_INT};
+	#var {c_dex} {$MSDP_DEX};
+	#var {c_wis} {$MSDP_WIS};
+	#var {c_con} {$MSDP_CON};
+	#var {c_cha} {$MSDP_CHA};
+	
+	updatestats;
+}
+
+#event {IAC SB MSDP IAC AFFECTS} {
+	#var {affects} {$MSDP_AFFECTS};
+	#nop parse here;
+	updateaffects;
+}
+
+#event {IAC SB MSDP IAC SE} {
+	#var {c_hp} {$MSDP_HEALTH};
+	#var {c_hpm} {$MSDP_HEALTH_MAX};
+	#math {c_hpp} {$MSDP_HEALTH*100/$MSDP_HEALTH_MAX};
+
+	#var {c_mp} {$MSDP_MANA};
+	#var {c_mpm} {$MSDP_MANA_MAX};
+	#math {c_mpp} {$MSDP_MANA*100/$MSDP_MANA_MAX};
+
+	#var {c_mv} {$MSDP_MOVEMENT};
+	#var {c_mvm} {$MSDP_MOVEMENT_MAX};
+	#math {c_mvp} {$MSDP_MOVEMENT*100/$MSDP_MOVEMENT_MAX};
+
+	#var {c_align} {$MSDP_ALIGNMENT};
+
+	#var {op_n} {$MSDP_OPPONENT_NAME};
+	#var {op_lvl} {$MSDP_OPPONENT_LEVEL};
+	#var {op_hp} {$MSDP_OPPONENT_HEALTH};
+
+	#var {map_exits} {$MSDP_ROOM_EXITS};
+	#var {map_vnum} {$MSDP_ROOM_VNUM};
+	#var {map_name} {$MSDP_ROOM_NAME};
+	#var {map_area} {$MSDP_AREA_NAME};
+	
+	#var {exits} {};
+	#foreach {n;north;e;east;s;south;w;west;u;up;d;down} {exit}
+	{
+		#if {&MSDP_ROOM_EXITS[$exit] == 0}
+		{
+			#continue
+		};
+
+		#if {"$MSDP_ROOM_EXITS[$exit]" == "{O|OPEN}"}
+		{
+			#var {exits} {$exits<138>$DIR_NAME[$exit]}
+		};
+		#else
+		{
+			#var {exits} {$exits<168>$DIR_NAME[$exit]}
+		}
+	};
+
+	updateprompt;
+	updatemap;
+}
+
+#class msdpvar close;

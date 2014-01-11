@@ -1,0 +1,29 @@
+#class eqdb kill;
+#class eqdb open;
+
+#alias {startdbidact} {
+	#act {^Object '%*' is type %*, extra flags %* .} {
+		#line log {eqlog.txt} {%0};
+		#delay {2} {#line log {eqlog.txt} { };};
+		#delay {2} {#unact {^Affects %* by %*.};};
+		#unact {^Object '%*' is type %*, extra flags %* .};
+	};
+	#act {^Level: %*, weight: %*, size: %*, value: %*, in %* state. Made of %*} {
+		#line log {eqlog.txt} {%0};
+		#unact {^Level: %*, weight: %*, size: %*, value: %*, in %* state. Made of %*};
+	};
+	#act {^Armor class is %*.} {
+		#line log {eqlog.txt} {%0};
+		#unact {^Armor class is %*.};
+	};
+	#act {^Affects %* by %*.} {
+		#line log {eqlog.txt} {%0};
+	};
+}
+
+#alias {dbid} {
+	startdbidact;
+	repeatcast id %1;
+}
+
+#class eqdb close;

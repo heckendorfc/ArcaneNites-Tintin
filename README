@@ -1,0 +1,11 @@
+Arcane Nites TinTin++ Scripts
+----------------------------
+Configure ?load.tin and yourname.tin (ex: sload and sel)
+
+To run: ./start.sh sload.tin
+
+Useful Aliases:
+buff -- automatic spellups
+printgroup -- print group vitals (also shown automatically in combat)
+stat_lvl -- print level metrics (TimePerLevel)
+dbid * -- cast identify and log the output to a file

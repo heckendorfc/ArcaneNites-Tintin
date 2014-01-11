@@ -1,0 +1,73 @@
+#ACTION {^You fall flat on your face!} {
+	stand
+}
+
+#ACTION {crushes you with a powerful blow!$}
+{
+	stand
+}
+
+#ACTION {sends you sprawling with a powerful bash!$}
+{
+	stand
+}
+
+#ACTION {trips you and you go down!$}
+{
+	stand
+}
+
+#ACTION {smashes you with {his|her} tail!$}
+{
+	stand
+}
+
+#MACRO {\e[11~}
+{
+	stance offensive
+}
+
+#MACRO {\e[12~}
+{
+	stance defensive
+}
+
+#read {base/buff.tin};
+#read {base/autobuff.tin};
+#read {base/intercom.tin};
+#read {base/combat.tin};
+#read {base/stat.tin};
+#read {base/eqdb.tin};
+#read {msdp/msdp.tin};
+#read {msdp/msdp_var.tin};
+#read {msdp/mapper.tin};
+#read {msdp/setup.tin};
+#read {msdp/ui.tin};
+
+#nop #GAG              {^You are hungry};
+#nop #GAG              {^You are thirsty};
+
+#CONFIG           {AUTO TAB}  {5000}
+#CONFIG           {BUFFER SIZE}  {20000}
+#CONFIG           {COMMAND COLOR}  {<078>}
+#CONFIG           {COMMAND ECHO}  {ON}
+#CONFIG           {CONNECT RETRY}  {15}
+#CONFIG           {CONVERT META}  {OFF}
+#CONFIG           {HISTORY SIZE}  {1000}
+#CONFIG           {LOG}  {RAW}
+#CONFIG           {PACKET PATCH}  {0.00}
+#CONFIG           {REPEAT CHAR}  {!}
+#CONFIG           {REPEAT ENTER}  {OFF}
+#CONFIG           {SCROLL LOCK}  {ON}
+#CONFIG           {SPEEDWALK}  {ON}
+#CONFIG           {TINTIN CHAR}  {#}
+#CONFIG           {VERBATIM}  {OFF}
+#CONFIG           {VERBATIM CHAR}  {\}
+#CONFIG           {VERBOSE}  {OFF}
+#CONFIG           {WORDWRAP}  {ON}
+#PATHDIR          {d}  {u}  {32}
+#PATHDIR          {e}  {w}  {2}
+#PATHDIR          {n}  {s}  {1}
+#PATHDIR          {s}  {n}  {4}
+#PATHDIR          {u}  {d}  {16}
+#PATHDIR          {w}  {e}  {8}

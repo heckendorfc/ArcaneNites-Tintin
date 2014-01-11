@@ -1,0 +1,49 @@
+#class ui kill;
+#class ui open;
+
+#split {0} {3};
+
+#alias {showchat %*} {
+	#if {$primarychar} {
+		#line log {chat} {%1};
+	}
+};
+
+#act {~%1 tells you '%2} {#line log {chat} {%0}};
+#act {~%1 says '%2} {showchat %0};
+#act {~%1 shrieks '%2} {showchat %0};
+#act {~%1 OOCs '%2} {showchat %0};
+#act {~\e[0;37m%1> %2} {showchat %0};
+#act {~%1 tells the group '%2} {showchat %0};
+
+#alias {updateprompt} {
+	#show {${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align  || ${op_n}(${op_lvl}) - ${op_hp}} 2;
+	#nop {#alias {myprompt} { #$pcs #var gstat[$myname] {${myname}: ${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align}; };};
+	#$pcs #var gstat[$myname] {${myname}: ${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align};
+};
+
+#alias {updatestats} {
+	#if {$primarychar} {
+		#line log {cstats} {Current Stats:};
+		#line log {cstats} {HIT: $c_hr};
+		#line log {cstats} {DAM: $c_dr};
+		#line log {cstats} {SAV: $c_save};
+		#line log {cstats} { AC: $c_ac};
+		#line log {cstats} {STR: $c_str};
+		#line log {cstats} {CON: $c_con};
+		#line log {cstats} {DEX: $c_dex};
+		#line log {cstats} {WIS: $c_wis};
+		#line log {cstats} {INT: $c_int};
+		#line log {cstats} {CHA: $c_cha};
+	}
+};
+
+#alias {updateaffects} {
+	#if {$primarychar} {
+		#foreach {&affects[]} {aind} {
+			#line log {affects} {$affects[aind][0]: $affects[aind][1]}
+		}
+	}
+};
+
+#class ui close;

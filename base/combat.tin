@@ -1,0 +1,55 @@
+#class combat kill;
+#class combat open;
+
+#var HP_THRESH 0.7;
+#var hardmob 0;
+
+#act {tells the group 'hardmob %1'} { 
+	#var hardmob {%1};
+}
+
+#act {tells the group 'hardmob %1 %2'} { 
+	#var hardmob {%1};
+	#var targetmob {%2};
+}
+
+#act {tells the group 'recall'} { recall }
+
+#act {^Divine power courses through your blood.} {#showme {\a\}}
+#act {^You feel the power of the Gods empower you.} {#showme {\a\}}
+
+#function curtime { #format {result} {%T} }
+
+#act {is DEAD!!$} {
+	#var combatcount 0;
+	#var incombat 0;
+}
+
+#act {(%d%%)$}{
+	#var incombat @curtime{};
+	#math combatcount {$combatcount+1};
+	combatsignal;
+}
+
+#tick {oocombat} {
+	#if {$incombat} {
+		#math tdiff @curtime{}-$incombat;
+		#if {$tdiff>3} { 
+			#var incombat 0;
+			#var combatcount 0;
+		}
+	}
+} {3}
+
+#alias {k_cmd} {
+	#n k %1;
+}
+
+#alias {pullgroup} {
+	#foreach {$groupmem[]} name {
+		sc repeatcast sum $groupmem[$name];
+	};
+	#if {"%0"!=""} { sc %0; };
+}
+
+#class combat close;

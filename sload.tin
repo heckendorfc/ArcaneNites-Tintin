@@ -1,0 +1,4 @@
+#read msdp/msdp.tin
+#nop pcs is the primary character session name;
+#var pcs sel;
+#session sel arcanenites.com 7000;

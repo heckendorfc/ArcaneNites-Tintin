@@ -1,0 +1,105 @@
+#tick {noafk} {#cr} {180}
+
+#alias {obuff} {
+	c fly %1;
+	c sanct %1;
+	c 'holy aura' %1;
+	c armor %1;
+	c shield %1;
+	c haste %1;
+	c giant %1;
+}
+
+#var myname selic
+#act {tells the group 'refresh'} { #kill;#read sel.tin; }
+
+#act {^You can't see a thing!$} { pcc c 'cure blind' }
+#nop {#act {^Alas, you cannot go} { #map undo };};
+
+#message variables off
+#alias {printgroup} {
+	#foreach {$gstat} {gind} {
+		#showme {$gstat[$gind]};
+	}
+};
+
+#tick {combatgroupstat} {
+	#if {$incombat>0} {
+		printgroup;
+	};
+} {3};
+
+#alias {combatsignal} {
+	#if {$hardmob} {
+		#if	{$combatcount==1} {
+			pcc c 'fire curse';
+		}
+	};
+}
+
+#alias {defaultcombatcommand} {
+	c 'elemental fire';
+}
+
+#alias {regear} {
+	wear skull;
+	wear disc;
+	wear defender;
+	wear defeneder;
+	wear golden;
+	wear strongman;
+	wear splintmail;
+	wear necklace;
+	wear medallion;
+	wear cash;
+	wear sash;
+	wear binding;
+	wear granite ring;
+	wear slippers;
+	wear robe;
+	wear bandanna;
+	wear gloves;
+	wear mithril bracelet;
+	wear knowledge;
+	wear glass eye;
+	wear backpack;
+}
+
+#list {solospells} create
+	{stone skin}
+	{elemental shield}
+	{barkskin}
+	{animal senses}
+	{deflection}
+	{bladeturn}
+	{magnetic barrier}
+	{fire protection}
+	{detect hidden}
+	{might}
+	{combat};
+
+#list {myspells} create
+	{fly}
+	{giant strength}
+	{shillelagh}
+	{haste}
+	{bless}
+	{holy aura}
+	{sanctuary}
+	{natures force};
+/*
+	{armor}
+#*/
+#read run.tin
+
+#var {primarychar} {1};
+
+#alias {gogo} {
+	loadmap;
+	msdp_report;
+};
+/*
+	#tic {gprompt} {
+		#all {myprompt;};
+	} {1};
+*/

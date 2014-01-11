@@ -1,0 +1,19 @@
+#class stat kill;
+#class stat open;
+
+#var leveltimes {};
+
+#act {^Your gain is: %*/%* hp, %*/%* m, %*/%* mv %*/%* prac.} {
+	#list leveltimes insert 1 {@curtime{}};
+	#if {&leveltimes[]>5} {
+		#list leveltimes delete 6;
+	};
+	#line log {gains.$myname.log} {%1,%3,%5,%7};
+}
+
+#alias {stat_lvl} {
+	#math {avglvltime} {($leveltimes[1]-$leveltimes[-1])/&leveltimes[]};
+	#showme {Time per level: $avglvltime};
+}
+
+#class stat close;

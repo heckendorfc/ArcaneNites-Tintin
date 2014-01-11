@@ -1,0 +1,78 @@
+#class intercom kill;
+#class intercom open;
+
+#var g_cc_override 0;
+#var cc_override 0;
+
+#var sessionname {
+	{merbie} {m}
+	{nmijist} {n}
+	{fegliaq} {f}
+}
+
+#var {healmem} {
+	{merbie} {cd}
+	{fegliaq} {cd}
+}
+
+#list {groupmem} create
+	{merbie}
+	{nmijist}
+	{fegliaq};
+
+#list g_combatlist create;
+#list groupmem find $myname tempnum;
+#list groupmem delete $tempnum;
+
+#alias {group_combatsignal} {
+	#nop {shouldhealme;};
+	shouldrescueme;
+}
+
+#alias {shouldrescueme}{
+	#if {$shouldrescueme} {
+		#var shouldrescueme 0;
+		rescueme;
+	};
+}
+
+#alias {shouldhealme}{
+	#if {$stats[hp]<($stats[maxhp]*$HP_THRESH)} {
+		healme;
+	};
+}
+
+#alias {rescueme} {
+	#showme {ASKING FOR RESCUE};
+	#foreach {$groupmem[]} name {
+		#$sessionname[$groupmem[$name]] g_pcc rescue $myname;
+	};
+}
+
+#alias {safehealme} {
+	#showme {ASKING FOR HEAL};
+	#foreach {$groupmem[]} name {
+		#$sessionname[$groupmem[$name]] sc $healmem[$groupmem[$name]] $myname;
+	};
+}
+
+#alias {healme} {
+	#foreach {$healmem[]} name {
+		#showme {ASKING FOR HEAL from $name ($sessionname[$name])};
+		#showme {#$sessionname[$name] g_pcc $healmem[$name] $myname};
+		#$sessionname[$name] g_pcc $healmem[$name] $myname;
+	};
+}
+
+#alias {gflee} {
+	#var g_command 1;
+	#showme {ORDERING GROUP TO FLEE};
+	#foreach {$groupmem[]} name {
+		#$sessionname[$groupmem[$name]] {
+			#var g_cc_override 1;
+			#list g_combatlist insert 1 {#var g_cc_override 0;#4 flee %1};
+		};
+	};
+}
+
+#class intercom close;

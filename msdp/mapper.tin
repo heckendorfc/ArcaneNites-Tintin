@@ -1,0 +1,36 @@
+#class mapper kill;
+#class mapper open;
+
+#var {DIR_NAME}
+{
+	{n} {N}
+	{e} {E}
+	{s} {S}
+	{w} {W}
+	{u} {U}
+	{d} {D}
+	{north} {N}
+	{east} {E}
+	{south} {S}
+	{west} {W}
+	{up} {U}
+	{down} {D}
+}
+
+#alias {updateroom} {
+	#map goto {$map_vnum} {dig};
+
+	#map set roomarea {$map_area};
+	#map set roomname {$map_name};
+	#map set roomcolor <178>;
+}
+
+#alias {updatemap} {
+	#if {$primarychar} {
+		#if {$map_vnum} {
+			updateroom;
+		}
+	}
+}
+
+#class mapper close;
