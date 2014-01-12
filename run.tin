@@ -38,6 +38,7 @@
 #read {base/combat.tin};
 #read {base/stat.tin};
 #read {base/eqdb.tin};
+#read {msdp/repop.tin};
 #read {msdp/msdp.tin};
 #read {msdp/msdp_var.tin};
 #read {msdp/mapper.tin};
