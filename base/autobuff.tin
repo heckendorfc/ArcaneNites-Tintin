@@ -8,9 +8,7 @@
 #act {tells the group 'buffoff'$} { #var shouldbuff 0; }
 
 #tick {checkbuffs} {
-	#var buffing 0;
-	#foreach {$spells[]} name { #if {$spells[$name]==2} { #var buffing 1; } };
-	#if {$incombat==0 && $shouldbuff && $buffing==0}{
+	#if {$incombat==0 && $shouldbuff && &commandlist[]==0}{
 		needbuff;
 	}
 } {20}
