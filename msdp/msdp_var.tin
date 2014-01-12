@@ -1,7 +1,7 @@
 #class msdpvar kill;
 #class msdpvar open;
 
-#event {IAC SB MSDP IAC {HITROLL|DAMROLL|SAVES|AC|INT|WIS|STR|DEX|CON|CHA}} {
+#event {IAC SB MSDP {HITROLL|DAMROLL|SAVES|AC|INT|WIS|STR|DEX|CON|CHA}} {
 	#var {c_hr} {$MSDP_HITROLL};
 	#var {c_dr} {$MSDP_DAMROLL};
 	#var {c_save} {$MSDP_SAVES};
@@ -13,13 +13,13 @@
 	#var {c_con} {$MSDP_CON};
 	#var {c_cha} {$MSDP_CHA};
 	
-	updatestats;
+	#nop updatestats;
 }
 
-#event {IAC SB MSDP IAC AFFECTS} {
+#event {IAC SB MSDP AFFECTS} {
 	#var {affects} {$MSDP_AFFECTS};
 	#nop parse here;
-	updateaffects;
+	#nop updateaffects;
 }
 
 #event {IAC SB MSDP IAC SE} {

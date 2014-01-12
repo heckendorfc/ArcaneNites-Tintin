@@ -17,10 +17,14 @@
 #act {~%1 tells the group '%2} {showchat %0};
 
 #alias {updateprompt} {
-	#show {${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align  || ${op_n}(${op_lvl}) - ${op_hp}} 2;
+	#show {${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align  || ${op_n}(${op_lvl}) - ${op_hp} || AreaTime: $repoptime} 2;
 	#nop {#alias {myprompt} { #$pcs #var gstat[$myname] {${myname}: ${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align}; };};
 	#$pcs #var gstat[$myname] {${myname}: ${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align};
 };
+
+#tick {prompttick} {
+	updateprompt;
+} {1};
 
 #alias {updatestats} {
 	#if {$primarychar} {
