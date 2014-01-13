@@ -2,11 +2,11 @@
 #class eqdb open;
 
 #alias {startdbidact} {
-	#act {^Object '%*' is type %*, extra flags %* .} {
+	#act {^Object '%*' is type %*, extra flags %*.} {
 		#line log {eqlog.txt} {%0};
 		#delay {2} {#line log {eqlog.txt} { };};
 		#delay {2} {#unact {^Affects %* by %*.};};
-		#unact {^Object '%*' is type %*, extra flags %* .};
+		#unact {^Object '%*' is type %*, extra flags %*.};
 	};
 	#act {^Level: %*, weight: %*, size: %*, value: %*, in %* state. Made of %*} {
 		#line log {eqlog.txt} {%0};
