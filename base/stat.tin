@@ -3,11 +3,14 @@
 
 #var leveltimes {};
 
-#act {^Your gain is: %*/%* hp, %*/%* m, %*/%* mv %*/%* prac.} {
+#act {^You gain more PoWeR and GlOrY!!} {
 	#list leveltimes insert 1 {@curtime{}};
 	#if {&leveltimes[]>5} {
 		#list leveltimes delete 6;
 	};
+}
+
+#act {^Your gain is: %*/%* hp, %*/%* m, %*/%* mv %*/%* prac.} {
 	#line log {gains.$myname.log} {%1,%3,%5,%7};
 }
 
