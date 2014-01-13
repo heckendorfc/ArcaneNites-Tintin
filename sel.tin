@@ -43,26 +43,26 @@
 
 #alias {regear} {
 	wear skull;
-	wear disc;
 	wear defender;
 	wear defeneder;
-	wear golden;
-	wear strongman;
-	wear splintmail;
-	wear necklace;
-	wear medallion;
-	wear cash;
-	wear sash;
-	wear binding;
-	wear granite ring;
-	wear slippers;
-	wear robe;
-	wear bandanna;
-	wear gloves;
-	wear mithril bracelet;
-	wear knowledge;
-	wear glass eye;
-	wear backpack;
+	wear amethyst;
+	wear tiger;
+	wear glowing;
+	wear wrap;
+	wear aesirian;
+	wear ice;
+	wear ice;
+	wear ice;
+	wear anklet;
+	wear moon;
+	wear mittens;
+	wear sleeves;
+	wear actane;
+	wear arcanist;
+	wear harp;
+	wear flame;
+	wear goggle;
+	wear earmuff;
 }
 
 #list {solospells} create
