@@ -17,8 +17,13 @@
 #act {~%1 tells the group '%2} {showchat %0};
 
 #alias {updateprompt} {
-	#show {${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align  || ${op_n}(${op_lvl}) - ${op_hp} || AreaTime: $repoptime} 2;
-	#nop {#alias {myprompt} { #$pcs #var gstat[$myname] {${myname}: ${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align}; };};
+	#if { $opp_n } {
+		#var {opp_str} {${op_n} (Lvl ${op_lvl}) - ${op_hp}% hp};
+	};
+	#else {
+		#var {opp_str} { };
+	};
+	#show {${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align  || ${opp_str} || AreaTime: $repoptime} 2;
 };
 
 #tick {prompttick} {
