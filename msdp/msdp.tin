@@ -53,12 +53,12 @@
 {
         #send {$IAC$DO$MSDP\};
 }
-
+/*
 #event {IAC SB MSDP}
 {
         #var {MSDP_%0} {%1};
 }
-
+*/
 #nop Ask the server to report all keys inside REPORTABLE_VARIABLES
 #alias {msdp_report}
 {

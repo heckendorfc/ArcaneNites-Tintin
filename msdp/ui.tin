@@ -19,7 +19,6 @@
 #alias {updateprompt} {
 	#show {${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align  || ${op_n}(${op_lvl}) - ${op_hp} || AreaTime: $repoptime} 2;
 	#nop {#alias {myprompt} { #$pcs #var gstat[$myname] {${myname}: ${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align}; };};
-	#$pcs #var gstat[$myname] {${myname}: ${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align};
 };
 
 #tick {prompttick} {
@@ -29,24 +28,45 @@
 #alias {updatestats} {
 	#if {$primarychar} {
 		#line log {cstats} {Current Stats:};
-		#line log {cstats} {HIT: $c_hr};
-		#line log {cstats} {DAM: $c_dr};
-		#line log {cstats} {SAV: $c_save};
-		#line log {cstats} { AC: $c_ac};
-		#line log {cstats} {STR: $c_str};
-		#line log {cstats} {CON: $c_con};
-		#line log {cstats} {DEX: $c_dex};
-		#line log {cstats} {WIS: $c_wis};
-		#line log {cstats} {INT: $c_int};
-		#line log {cstats} {CHA: $c_cha};
-	}
+
+		#var cs_head {Stat};
+		#foreach {$cs[+1][]} {cs_name} {
+			#var cs_head {$cs_head	$cs_name};
+		};
+		#line log {cstats} {$cs_head};
+
+		#foreach {$cs[]} {cs_stat} {
+			#var cs_line {$cs_stat:};
+			#foreach {$cs[$cs_stat][]} {cs_name} {
+				#var {cs_line} {$cs_line	$cs[$cs_stat][$cs_name]};
+			};
+			#line log {cstats} {$cs_line};
+		};
+		#line log {cstats} { };
+	};
+	#else {
+		#$pcs updatestats;
+	};
 };
 
 #alias {updateaffects} {
 	#if {$primarychar} {
-		#foreach {&affects[]} {aind} {
-			#line log {affects} {$affects[aind][0]: $affects[aind][1]}
+		#line log {affects} {Current Affects:};
+
+		#var {aff_line} {Affect};
+		#foreach {$affects[+1][]} {aff_cname} {
+			#var {aff_line} {$aff_line $aff_name};
+		};
+		#line log {affects} {$aff_line};
+		
+		#foreach {$affects[]} {aff_name} {
+			#var {aff_line} {$aff_name}
+			#foreach {&affects[$aff_name][]} {aff_ind} {
+				#var {aff_line} {$aff_line $affects[$aff_name][$aff_ind]};
+			};
 		}
+		#line log {affects} {$aff_line};
+		#line log {affects} { };
 	}
 };
 

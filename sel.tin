@@ -1,4 +1,4 @@
-#tick {noafk} {#cr} {180}
+#tick {noafk} {#cr} {180};
 
 #alias {obuff} {
 	c fly %1;
@@ -8,12 +8,13 @@
 	c shield %1;
 	c haste %1;
 	c giant %1;
-}
+};
 
-#var myname selic
-#act {tells the group 'refresh'} { #kill;#read sel.tin; }
+#var myname selic;
+#var myses sel;
+#act {tells the group 'refresh'} { #kill;#read sel.tin; };
 
-#act {^You can't see a thing!$} { pcc c 'cure blind' }
+#act {^You can't see a thing!$} { pcc c 'cure blind' };
 #nop {#act {^Alas, you cannot go} { #map undo };};
 
 #message variables off

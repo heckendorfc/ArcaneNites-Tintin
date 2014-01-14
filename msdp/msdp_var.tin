@@ -1,28 +1,26 @@
 #class msdpvar kill;
 #class msdpvar open;
 
-#event {IAC SB MSDP {HITROLL|DAMROLL|SAVES|AC|INT|WIS|STR|DEX|CON|CHA}} {
-	#var {c_hr} {$MSDP_HITROLL};
-	#var {c_dr} {$MSDP_DAMROLL};
-	#var {c_save} {$MSDP_SAVES};
-	#var {c_ac} {$MSDP_AC};
-	#var {c_str} {$MSDP_STR};
-	#var {c_int} {$MSDP_INT};
-	#var {c_dex} {$MSDP_DEX};
-	#var {c_wis} {$MSDP_WIS};
-	#var {c_con} {$MSDP_CON};
-	#var {c_cha} {$MSDP_CHA};
-	
-	#nop updatestats;
+#alias {eventstat} {
+	#format shortstat {%.3s} {%1};
+	#$pcs #var {cs[$shortstat][$myses]} {%2};
+
+	updatestats;
 }
 
-#event {IAC SB MSDP AFFECTS} {
-	#var {affects} {$MSDP_AFFECTS};
-	#nop parse here;
+#alias {parseaffects} {
+	#foreach {affects[%*]} {aff_name} {
+		#$pcs #var ca[$aff_name][$myses] {$affects[$aff_name]};
+	};
+};
+
+#alias {eventaffects} {
+	#var {affects} {%2};
+	#nop parseaffects;
 	#nop updateaffects;
 }
 
-#event {IAC SB MSDP IAC SE} {
+#alias {eventother} {
 	#var {c_hp} {$MSDP_HEALTH};
 	#var {c_hpm} {$MSDP_HEALTH_MAX};
 	#math {c_hpp} {$MSDP_HEALTH*100/$MSDP_HEALTH_MAX};
@@ -64,8 +62,27 @@
 		}
 	};
 
+	#$pcs #var gstat[$myname] {${myname}: ${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align};
+
 	updateprompt;
 	updatemap;
 }
+
+#event {IAC SB MSDP} {
+	#var {MSDP_%0} {%1};
+
+	#if {"%0" == "{HITROLL|DAMROLL|SAVES|AC|INT|WIS|STR|DEX|CON|CHA}"} {
+		eventstat {%0} {%1};
+	};
+	#elseif {"%0" == "{AFFECTS}"} {
+		eventaffects {%0} {%1};
+	};
+	#elseif {"%0" == "{HEALTH|HEALTH_MAX|MANA|MANA_MAX|MOVEMENT|MOVEMENT_MAX|ALIGNMENT|OPPONENT_NAME|OPPONENT_LEVEL|OPPONENT_HEALTH|ROOM_EXITS|ROOM_VNUM|ROOM_NAME|AREA_NAME}"} {
+		eventother;
+	};
+	#else {
+		#showme {Unknown MSDP %0 = %1};
+	};
+};
 
 #class msdpvar close;
