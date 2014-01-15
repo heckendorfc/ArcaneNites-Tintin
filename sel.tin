@@ -43,7 +43,7 @@
 }
 
 #alias {regear} {
-	wear skull;
+	wear lantern;
 	wear defender;
 	wear defeneder;
 	wear amethyst;
@@ -51,17 +51,17 @@
 	wear glowing;
 	wear wrap;
 	wear aesirian;
-	wear ice;
+	wear cowl;
 	wear ice;
 	wear ice;
 	wear anklet;
 	wear moon;
-	wear mittens;
+	wear dragonhide;
 	wear sleeves;
 	wear actane;
 	wear arcanist;
 	wear harp;
-	wear flame;
+	wear yuul;
 	wear goggle;
 	wear earmuff;
 }
