@@ -17,7 +17,7 @@
 #act {~%1 tells the group '%2} {showchat %0};
 
 #alias {updateprompt} {
-	#if { $opp_n } {
+	#if { $op_n } {
 		#var {opp_str} {${op_n} (Lvl ${op_lvl}) - ${op_hp}% hp};
 	};
 	#else {
