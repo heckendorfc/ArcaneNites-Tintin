@@ -3,18 +3,18 @@
 
 #var {DIR_NAME}
 {
-	{n} {N}
-	{e} {E}
-	{s} {S}
-	{w} {W}
-	{u} {U}
-	{d} {D}
-	{north} {N}
-	{east} {E}
-	{south} {S}
-	{west} {W}
-	{up} {U}
-	{down} {D}
+	{n} {n}
+	{e} {e}
+	{s} {s}
+	{w} {w}
+	{u} {u}
+	{d} {d}
+	{north} {n}
+	{east} {e}
+	{south} {s}
+	{west} {w}
+	{up} {u}
+	{down} {d}
 }
 
 #alias {updateroom} {
@@ -22,7 +22,15 @@
 
 	#map set roomarea {$map_area};
 	#map set roomname {$map_name};
-	#map set roomcolor <178>;
+	#map set roomcolor {<178>};
+
+	#foreach {$exit_vnum[]} {ename} {
+		#map get {roomvnum} {exvnum} {$exit_vnum[$ename]};
+		#map dig {$DIR_NAME[$ename]} {$exit_vnum[$ename]};
+		#if { $exvnum == 0 } {
+			#map set {roomcolor} {<fca>} {$exit_vnum[$ename]};
+		};
+	};
 }
 
 #alias {updatemap} {

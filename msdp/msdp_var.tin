@@ -9,16 +9,18 @@
 }
 
 #alias {clearaffects} {
-	#foreach {$ca[]} {aff_name} {
-		#$pcs #var ca[$aff_name][%1] {-1};
+	#if {&ca[]>0} {
+		#foreach {$ca[]} {aff_name} {
+			#$pcs #var {ca[$aff_name][%1]} {-1};
+		};
 	};
 };
 
 #alias {parseaffects} {
 	#$pcs clearaffects $myses;
-	#$pcs #var ca[Affect][$myses] {0};
+	#$pcs #var {ca[Affect][$myses]} {0};
 	#foreach {$affects[]} {aff_name} {
-		#$pcs #var ca[$aff_name][$myses] {$affects[$aff_name]};
+		#$pcs #var {ca[$aff_name][$myses]} {$affects[$aff_name]};
 	};
 };
 
@@ -64,8 +66,14 @@
 	#var {op_lvl} {$MSDP_OPPONENT_LEVEL};
 	#var {op_hp} {$MSDP_OPPONENT_HEALTH};
 
+
+	#$pcs #var gstat[$myname] {${myname}: ${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align};
+
+	updateprompt;
+}
+
+#alias {eventmap} {
 	#var {map_exits} {$MSDP_ROOM_EXITS};
-	#var {map_vnum} {$MSDP_ROOM_VNUM};
 	#var {map_name} {$MSDP_ROOM_NAME};
 	#var {map_area} {$MSDP_AREA_NAME};
 
@@ -88,12 +96,12 @@
 			#var {exits} {$exits<168>$DIR_NAME[$exit]}
 		}
 	};
+};
 
-	#$pcs #var gstat[$myname] {${myname}: ${c_hpp}% hp  |  ${c_mpp}% mp  |  ${c_mvp}% mv  |  Align: $c_align};
-
-	updateprompt;
+#alias {eventmapfinish} {
+	#var {map_vnum} {$MSDP_ROOM_VNUM};
 	updatemap;
-}
+};
 
 #event {IAC SB MSDP} {
 	#var {MSDP_%0} {%1};
@@ -104,11 +112,17 @@
 	#elseif {"%0" == "{AFFECTS}"} {
 		eventaffects {%0} {%1};
 	};
-	#elseif {"%0" == "{HEALTH|HEALTH_MAX|MANA|MANA_MAX|MOVEMENT|MOVEMENT_MAX|ALIGNMENT|OPPONENT_NAME|OPPONENT_LEVEL|OPPONENT_HEALTH|ROOM_EXITS|ROOM_VNUM|ROOM_NAME|AREA_NAME}"} {
+	#elseif {"%0" == "{HEALTH|HEALTH_MAX|MANA|MANA_MAX|MOVEMENT|MOVEMENT_MAX|ALIGNMENT|OPPONENT_NAME|OPPONENT_LEVEL|OPPONENT_HEALTH}"} {
 		eventother;
 	};
+	#elseif {"%0" == "{ROOM_EXITS|ROOM_NAME|AREA_NAME}"} {
+		eventmap;
+	};
+	#elseif {"%0" == "ROOM_VNUM"} {
+		eventmapfinish;
+	};
 	#else {
-		#showme {Unknown MSDP %0 = %1};
+		#nop {#showme {Unhandled MSDP %0 = %1};};
 	};
 };
 
