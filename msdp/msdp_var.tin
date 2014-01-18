@@ -8,16 +8,41 @@
 	updatestats;
 }
 
+#alias {clearaffects} {
+	#foreach {$ca[]} {aff_name} {
+		#$pcs #var ca[$aff_name][%1] {-1};
+	};
+};
+
 #alias {parseaffects} {
-	#foreach {affects[%*]} {aff_name} {
+	#$pcs clearaffects $myses;
+	#$pcs #var ca[Affect][$myses] {0};
+	#foreach {$affects[]} {aff_name} {
 		#$pcs #var ca[$aff_name][$myses] {$affects[$aff_name]};
 	};
 };
 
 #alias {eventaffects} {
 	#var {affects} {%2};
-	#nop parseaffects;
-	#nop updateaffects;
+	parseaffects;
+	updateaffects;
+}
+
+#alias {parseexits} {
+	#var {exit_vnum} {};
+	#var {exit_door} {};
+	#foreach {$map_exits[]} {ename} {
+		#var tmpexit {};
+		#parse {$map_exits[$ename]} {echar} {
+			#if {"$echar" >= "0" && "$echar" <= "9"} {
+				#var {tmpexit} {$tmpexit$echar};
+			};
+			#else {
+				#var {exit_door[$ename]} {$echar}
+			};
+		}
+		#var {exit_vnum[$ename]} {$tmpexit}
+	};
 }
 
 #alias {eventother} {
@@ -43,6 +68,8 @@
 	#var {map_vnum} {$MSDP_ROOM_VNUM};
 	#var {map_name} {$MSDP_ROOM_NAME};
 	#var {map_area} {$MSDP_AREA_NAME};
+
+	parseexits;
 	
 	#var {exits} {};
 	#foreach {n;north;e;east;s;south;w;west;u;up;d;down} {exit}

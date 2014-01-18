@@ -17,7 +17,7 @@
 #act {~%1 tells the group '%2} {showchat %0};
 
 #alias {updateprompt} {
-	#if { $op_n } {
+	#if { "$op_n" != "" } {
 		#var {opp_str} {${op_n} (Lvl ${op_lvl}) - ${op_hp}% hp};
 	};
 	#else {
@@ -58,19 +58,29 @@
 	#if {$primarychar} {
 		#line log {affects} {Current Affects:};
 
-		#var {aff_line} {Affect};
-		#foreach {$affects[+1][]} {aff_cname} {
-			#var {aff_line} {$aff_line $aff_name};
+		#var {aff_line} {Affect	};
+		#foreach {$ca[+1][]} {aff_cname} {
+			#var {aff_line} {$aff_line	$aff_cname};
 		};
 		#line log {affects} {$aff_line};
 		
-		#foreach {$affects[]} {aff_name} {
-			#var {aff_line} {$aff_name}
-			#foreach {&affects[$aff_name][]} {aff_ind} {
-				#var {aff_line} {$aff_line $affects[$aff_name][$aff_ind]};
+		#foreach {$ca[]} {aff_name} {
+			#if {"$aff_name" == "Affect" } {
+				#continue;
 			};
+			#format {slen} {%L} {$aff_name};
+			#if {$slen < 13 } {
+				#format {sname} {%-13s} {$aff_name};
+			};
+			#else {
+				#format {sname} {%.13s} {$aff_name};
+			};
+			#var {aff_line} {$sname};
+			#foreach {$ca[+1][]} {aff_ind} {
+				#var {aff_line} {$aff_line	$ca[$aff_name][$aff_ind]};
+			};
+			#line log {affects} {$aff_line};
 		}
-		#line log {affects} {$aff_line};
 		#line log {affects} { };
 	}
 };
