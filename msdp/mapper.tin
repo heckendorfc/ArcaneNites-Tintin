@@ -31,6 +31,8 @@
 			#map set {roomcolor} {<fca>} {$exit_vnum[$ename]};
 		};
 	};
+
+	#map map {25x12} {ttmap} {a};
 }
 
 #alias {updatemap} {

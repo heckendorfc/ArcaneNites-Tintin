@@ -43,6 +43,7 @@
 {CON};
 {DEX};
 {CHA};
+{MINI_MAP};
 }
 
 #nop Turn telnet debug off once everything works as it's spammy.

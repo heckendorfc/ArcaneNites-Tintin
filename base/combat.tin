@@ -27,17 +27,23 @@
 
 #act {(%d%%)$}{
 	#var incombat @curtime{};
-	#math combatcount {$combatcount+1};
-	combatsignal;
+}
+
+#alias {startcombat} {
+	#var incombat @curtime{};
 }
 
 #tick {oocombat} {
 	#if {$incombat} {
+		#math combatcount {$combatcount+1};
 		#math tdiff @curtime{}-$incombat;
 		#if {$tdiff>3} { 
 			#var incombat 0;
 			#var combatcount 0;
-		}
+		};
+		#else {
+			combatsignal;
+		};
 	}
 } {3}
 
